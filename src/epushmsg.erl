@@ -41,7 +41,7 @@
 %%% New record functions
 %%%===================================================================
 
--spec new_params() -> record(pushmsg_params).
+-spec new_params() -> pushmsg_params.
 new_params() ->
     {ok, URL} = with_default(application:get_env(epushmsg, url), ?DEFAULT_URL),
     {ok, Key} = with_default(application:get_env(epushmsg, key), ?DEFAULT_KEY),
@@ -49,12 +49,12 @@ new_params() ->
                                 ?DEFAULT_SECRET),
     #pushmsg_params{url=URL, key=Key, secret=Secret}.
 
--spec new_params(binary(), binary()) -> record(pushmsg_params).
+-spec new_params(binary(), binary()) -> pushmsg_params.
 new_params(Secret, Key) ->
     {ok, URL} = with_default(application:get_env(epushmsg, url), ?DEFAULT_URL),
     #pushmsg_params{url=URL, key=Key, secret=Secret}.
 
--spec new_params(binary(), binary(), binary()) -> record(pushmsg_params).
+-spec new_params(binary(), binary(), binary()) -> pushmsg_params.
 new_params(URL, Secret, Key) ->
     #pushmsg_params{url=URL, key=Key, secret=Secret}.
 
@@ -62,7 +62,7 @@ new_params(URL, Secret, Key) ->
 %%% Charge functions
 %%%===================================================================
 
--spec push(record(pushmsg_params)) -> integer().
+-spec push(pushmsg_params) -> integer().
 push(#pushmsg_params{url=URL, key=Key, secret=Secret, payload=Payload}) ->
     Method = post,
     URL2 = hackney_url:parse_url(<<URL/binary, <<"/push/">>/binary >> ),
