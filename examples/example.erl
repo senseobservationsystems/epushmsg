@@ -9,18 +9,9 @@
 ex1() ->
     hackney:start(),
     PushMsgParams = epushmsg:new_params(),
-    Payload = <<"{
-                        \"aps\": {
-                            \"badge\": \"+1\",
-                            \"alert\": \"Hello World!\",
-                            \"sound\": \"default\"
-                        },
-                        \"aliases\": [\"diginux@gmail.com\"],
-                        \"android\": {
-                            \"alert\": \"Hello World!\",
-                            \"extra\": {\"type\":\"order\"}
-                        },
-                        \"type\": \"order\"
-                    }">>,
+    Audience = epushmsg:new_androidChannel(<<"CHANGE ME">>),
+    Alert = epushmsg:new_alert(<<"You got alert!">>),
+    Payload = epushmsg:new_payload(Audience, Alert, android),
+
     PushMsgParams2 = PushMsgParams#pushmsg_params{payload=Payload},
     epushmsg:push(PushMsgParams2).
