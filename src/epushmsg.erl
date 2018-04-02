@@ -79,7 +79,7 @@ new_namedUser(NamedUser) ->
 %%%===================================================================
 
 decode_audience(#pushmsg_androidChannel{androidChannel=AndroidChannel}) ->
-    {android_channel, AndroidChannel}.
+    {android_channel, AndroidChannel};
 decode_audience(#pushmsg_namedUser{namedUser=NamedUser}) ->
     {named_user, NamedUser}.
 
@@ -95,7 +95,7 @@ push(#pushmsg_params{url=URL, key=Key, secret=Secret, payload=#pushmsg_payload{a
     Options = [],
     PayloadJSON = {[{audience, {[decode_audience(Audience)]}},
                     {notification, {[decode_notification(Notification)]}},
-                    {device_types, [DeviceType]}]},
+                    {device_types, DeviceType}]},
 
     {ok, StatusCode, _RespHeaders, _Client} = hackney:request(Method, URL3,
                                                             Headers, jiffy:encode(PayloadJSON),
