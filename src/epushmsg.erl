@@ -30,6 +30,7 @@
          new_payload/3,
          new_alert/1,
          new_androidChannel/1,
+         new_namedUser/1,
          push/1]).
 
 -include("epushmsg.hrl").
@@ -70,12 +71,17 @@ new_alert(Alert) ->
 new_androidChannel(AndroidChannel) ->
     #pushmsg_androidChannel{androidChannel=AndroidChannel}.
 
+new_namedUser(NamedUser) ->
+    #pushmsg_namedUser{namedUser=NamedUser}.
+
 %%%===================================================================
 %%% Charge functions
 %%%===================================================================
 
 decode_audience(#pushmsg_androidChannel{androidChannel=AndroidChannel}) ->
     {android_channel, AndroidChannel}.
+decode_audience(#pushmsg_namedUser{namedUser=NamedUser}) ->
+    {named_user, NamedUser}.
 
 decode_notification(#pushmsg_alert{alert=Alert}) ->
     {alert, Alert}.
