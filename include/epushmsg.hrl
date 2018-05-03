@@ -23,7 +23,3 @@
 %%% @end
 
 -record(pushmsg_params, {url, key, secret, payload}).
--record(pushmsg_payload, {audience, notification, device_type}).
--record(pushmsg_alert, {alert}).
--record(pushmsg_androidChannel, {androidChannel}).
--record(pushmsg_namedUser, {namedUser}).

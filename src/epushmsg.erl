@@ -27,10 +27,6 @@
 -export([new_params/0,
          new_params/2,
          new_params/3,
-         new_payload/3,
-         new_alert/1,
-         new_androidChannel/1,
-         new_namedUser/1,
          push/1]).
 
 -include("epushmsg.hrl").
@@ -62,40 +58,17 @@ new_params(Secret, Key) ->
 new_params(URL, Secret, Key) ->
     #pushmsg_params{url=URL, key=Key, secret=Secret}.
 
-new_payload(Audience, Notification, DeviceType) ->
-    #pushmsg_payload{audience=Audience, notification=Notification, device_type=DeviceType}.
-
-new_alert(Alert) ->
-    #pushmsg_alert{alert=Alert}.
-
-new_androidChannel(AndroidChannel) ->
-    #pushmsg_androidChannel{androidChannel=AndroidChannel}.
-
-new_namedUser(NamedUser) ->
-    #pushmsg_namedUser{namedUser=NamedUser}.
-
 %%%===================================================================
 %%% Charge functions
 %%%===================================================================
 
-decode_audience(#pushmsg_androidChannel{androidChannel=AndroidChannel}) ->
-    {android_channel, AndroidChannel};
-decode_audience(#pushmsg_namedUser{namedUser=NamedUser}) ->
-    {named_user, NamedUser}.
-
-decode_notification(#pushmsg_alert{alert=Alert}) ->
-    {alert, Alert}.
-
 -spec push(pushmsg_params) -> integer().
-push(#pushmsg_params{url=URL, key=Key, secret=Secret, payload=#pushmsg_payload{audience=Audience, notification=Notification, device_type=DeviceType}}) ->
+push(#pushmsg_params{url=URL, key=Key, secret=Secret, payload=PayloadJSON}) ->
     Method = post,
     URL2 = hackney_url:parse_url(<<URL/binary, <<"/push/">>/binary >> ),
     URL3 = URL2#hackney_url{user=Key, password=Secret},
     Headers = [{<<"Content-type">>, <<"application/json">>}],
     Options = [],
-    PayloadJSON = {[{audience, {[decode_audience(Audience)]}},
-                    {notification, {[decode_notification(Notification)]}},
-                    {device_types, DeviceType}]},
 
     {ok, StatusCode, _RespHeaders, _Client} = hackney:request(Method, URL3,
                                                             Headers, jiffy:encode(PayloadJSON),
